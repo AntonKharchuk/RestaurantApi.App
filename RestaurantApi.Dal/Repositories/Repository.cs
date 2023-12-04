@@ -35,8 +35,7 @@ namespace RestaurantApi.Dal.Repositories
 
         public async Task Update(T entity, int id)
         {
-            var tableEntity = _table.Find(id);
-            ThrowIfNull(tableEntity);
+            var tableEntity = await GetById(id);
             _context.Entry(tableEntity).CurrentValues.SetValues(entity);
         }
 
@@ -46,8 +45,7 @@ namespace RestaurantApi.Dal.Repositories
         }
         public async Task Delete(int id)
         {
-            var entity = await _table.FindAsync(id);
-            ThrowIfNull(entity);
+            var entity = await GetById(id);
             _table.Remove(entity!);
         }
         private static void ThrowIfNull(T? entity)
