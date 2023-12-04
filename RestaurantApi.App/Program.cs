@@ -21,11 +21,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//var restaurantDbContext = app.Services.GetService<RestaurantDbContext>();
-//restaurantDI.AddDataToDB(restaurantDbContext!);
-
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -16,16 +16,17 @@ namespace RestaurantApi.App
             {
                 RegisterModelServices<Ingredient>(services);
 
+                RegisterModelServices<Portion>(services);
+                RegisterModelServices<PriceListItem>(services);
+                RegisterModelServices<Order>(services);
+                RegisterModelServices<OrderItem>(services);
+
                 services.AddTransient<IMealRepository, MealRepository>();
                 services.AddTransient<IMealCRUDService, MealCRUDService>();
 
                 //services.AddTransient<IOrderItemRepository, OrderItemRepository>();
                 //services.AddTransient<IOrderItemCRUDService, OrderItemCRUDService>();
 
-                RegisterModelServices<Portion>(services);
-                RegisterModelServices<PriceListItem>(services);
-                RegisterModelServices<Order>(services);
-                RegisterModelServices<OrderItem>(services);
 
                 services.AddTransient<IMealsService, MealsService>();
                 //builder.Services.AddTransient<IOrdersService, OrdersService>();
