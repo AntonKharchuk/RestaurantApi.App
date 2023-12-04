@@ -16,8 +16,8 @@ namespace RestaurantApi.App
             {
                 RegisterModelServices<Ingredient>(services);
 
-                //services.AddTransient<IMealRepository, MealRepository>();
-                //services.AddTransient<IMealCRUDService, MealCRUDService>();
+                services.AddTransient<IMealRepository, MealRepository>();
+                services.AddTransient<IMealCRUDService, MealCRUDService>();
 
                 //services.AddTransient<IOrderItemRepository, OrderItemRepository>();
                 //services.AddTransient<IOrderItemCRUDService, OrderItemCRUDService>();
