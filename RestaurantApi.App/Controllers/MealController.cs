@@ -34,14 +34,15 @@ namespace RestaurantApi.App.Controllers
         [HttpGet("Ingredients/{id}", Name = "GetIngredientById")]
         public async Task<ActionResult<Ingredient>> GetIngredientById(int id)
         {
-            var ingredient = await _mealsService.IngredientService.GetItemById(id);
-
-            if (ingredient == null)
+            try
             {
-                return NotFound();
+                var ingredient = await _mealsService.IngredientService.GetItemById(id);
+                return Parser.IngredientFromDALToApp(ingredient);
             }
-
-            return Parser.IngredientFromDALToApp(ingredient);
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpPost("Ingredients", Name = "CreateIngredient")]
@@ -49,7 +50,7 @@ namespace RestaurantApi.App.Controllers
         {
             await _mealsService.IngredientService.CreateItem(Parser.IngredientFromAppToDAL(ingredient));
 
-            return CreatedAtRoute("GetIngredientById", new { id = ingredient.Id }, ingredient);
+            return CreatedAtRoute("CreateIngredient", new { id = ingredient.Id }, ingredient);
         }
 
         [HttpPut("Ingredients", Name = "UpdateIngredient")]
@@ -70,16 +71,14 @@ namespace RestaurantApi.App.Controllers
         [HttpDelete("Ingredients/{id}", Name = "DeleteIngredient")]
         public async Task<IActionResult> DeleteIngredient(int id)
         {
-            var ingredientService = _mealsService.IngredientService;
-            var ingredient = await ingredientService.GetItemById(id);
-
-            if (ingredient == null)
+            try
             {
-                return NotFound();
+                await _mealsService.IngredientService.DeleteItem(id);
             }
-
-            await ingredientService.DeleteItem(id);
-
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
             return NoContent();
         }
 

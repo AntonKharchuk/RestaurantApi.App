@@ -35,7 +35,8 @@ namespace RestaurantApi.Dal.Repositories
 
         public async Task Update(T entity, int id)
         {
-            var tableEntity = await GetById(id);
+            var tableEntity = _table.Find(id);
+            ThrowIfNull(tableEntity);
             _context.Entry(tableEntity).CurrentValues.SetValues(entity);
         }
 
