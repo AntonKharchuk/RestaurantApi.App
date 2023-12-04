@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 using RestaurantApi.App.RestaurantApi.App;
 using RestaurantApi.Dal;
 
@@ -7,10 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<RestaurantDbContext>();
+var connectionString = builder.Configuration.GetConnectionString("ConnStr");
+builder.Services.AddDbContext<RestaurantDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
-var restaurantDI = new RestaurantDI();
-restaurantDI.ConfigureServices(builder.Services);
+builder.Services.ConfigureRestaurantServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

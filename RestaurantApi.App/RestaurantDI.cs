@@ -10,9 +10,9 @@ namespace RestaurantApi.App
 
     namespace RestaurantApi.App
     {
-        public class RestaurantDI
+        public static class RestaurantDI
         {
-            public void ConfigureServices(IServiceCollection services)
+            public static void ConfigureRestaurantServices(this IServiceCollection services)
             {
                 RegisterModelServices<Ingredient>(services);
 
@@ -31,12 +31,12 @@ namespace RestaurantApi.App
                 //builder.Services.AddTransient<IOrdersService, OrdersService>();
             }
 
-            void RegisterModelServices<T>(IServiceCollection services) where T : class
+            static void  RegisterModelServices<T>(IServiceCollection services) where T : class
             {
                 services.AddTransient<IRepository<T>, Repository<T>>();
                 services.AddTransient<ICRUDService<T>, CRUDService<T>>();
             }
-            public void AddDataToDB(RestaurantDbContext dbContext)
+            public static void AddDataToDB(RestaurantDbContext dbContext)
             {
                 var chiken = new Ingredient { Id = 1, Name = "Chicken" };
                 var rice = new Ingredient { Id = 2, Name = "Rice" };
