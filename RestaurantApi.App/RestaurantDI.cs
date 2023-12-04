@@ -26,6 +26,9 @@ namespace RestaurantApi.App
                 RegisterModelServices<PriceListItem>(services);
                 RegisterModelServices<Order>(services);
                 RegisterModelServices<OrderItem>(services);
+
+                services.AddTransient<IMealsService, MealsService>();
+                //builder.Services.AddTransient<IOrdersService, OrdersService>();
             }
 
             void RegisterModelServices<T>(IServiceCollection services) where T : class
