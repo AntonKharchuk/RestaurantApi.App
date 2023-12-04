@@ -1,5 +1,4 @@
-﻿
-namespace RestaurantApi.Dal.Models
+﻿namespace RestaurantApi.App.Models
 {
     public class Ingredient
     {
