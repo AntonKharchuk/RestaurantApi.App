@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+
 using RestaurantApi.Dal.Models;
 
 namespace RestaurantApi.Dal
@@ -13,16 +14,11 @@ namespace RestaurantApi.Dal
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
 
-        public RestaurantDbContext()
+        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options)
+        : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=helloapp.db");
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
