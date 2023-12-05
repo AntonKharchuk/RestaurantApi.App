@@ -1,29 +1,25 @@
 ﻿
 namespace RestaurantApi.Dal.Models
 {
-    public class Ingredient
+    public class Ingredient: BaseEntity
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
         public List<Meal>? Meals { get; set; }
 
     }
-    public class Meal
+    public class Meal: BaseEntity
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public List<Ingredient>? Ingredients { get; set; }
     }
 
-    public class Portion
+    public class Portion: BaseEntity
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
     }
-    public class PriceListItem
+    public class PriceListItem: BaseEntity
     {
-        public int Id { get; set; }
         public decimal Price { get; set; }
         public decimal Amount { get; set; }
         public Meal? Meal { get; set; }
@@ -31,15 +27,13 @@ namespace RestaurantApi.Dal.Models
         public int PortionId { get; set; }
         public Portion? Portion { get; set; }
     }
-    public class Order
+    public class Order: BaseEntity
     {
-        public int Id { get; set; }
         public string? CustomerName { get; set; }
         public DateTime Date { get; set; }
     }
-    public class OrderItem
+    public class OrderItem: BaseEntity
     {
-        public int Id { get; set; }
         public string? Coment { get; set; }
         public bool IsReady { get; set; }
         public Order? Order { get; set; }
