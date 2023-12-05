@@ -1,7 +1,9 @@
 ﻿
+using RestaurantApi.Dal.Models;
+
 namespace RestaurantApi.Dal.Repositories
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : BaseEntity
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(int id);

@@ -1,9 +1,11 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 
+using RestaurantApi.Dal.Models;
+
 namespace RestaurantApi.Dal.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly RestaurantDbContext _context;
 
@@ -22,7 +24,7 @@ namespace RestaurantApi.Dal.Repositories
 
         public async Task<T> GetById(int id)
         {
-            var entity = await _table.FindAsync(id);
+            var entity = _table.FirstOrDefault((obj)=>obj.Id == id);
             ThrowIfNull(entity);
             return entity!;
         }

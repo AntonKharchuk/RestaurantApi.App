@@ -1,9 +1,10 @@
 ﻿
+using RestaurantApi.Dal.Models;
 using RestaurantApi.Dal.Repositories;
 
 namespace RestaurantApi.Dal.Services
 {
-    public class CRUDService<T> : ICRUDService<T> where T : class
+    public class CRUDService<T> : ICRUDService<T> where T : BaseEntity
     {
         private readonly IRepository<T> _repository;
 

@@ -32,7 +32,7 @@ namespace RestaurantApi.App
                 //builder.Services.AddTransient<IOrdersService, OrdersService>();
             }
 
-            static void  RegisterModelServices<T>(IServiceCollection services) where T : class
+            static void  RegisterModelServices<T>(IServiceCollection services) where T : BaseEntity
             {
                 services.AddTransient<IRepository<T>, Repository<T>>();
                 services.AddTransient<ICRUDService<T>, CRUDService<T>>();
