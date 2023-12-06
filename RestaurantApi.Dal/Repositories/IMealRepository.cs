@@ -5,6 +5,6 @@ namespace RestaurantApi.Dal.Repositories
 {
     public interface IMealRepository : IRepository<Meal>
     {
-        Task<IEnumerable<Meal>> GetInIdRange(int startId, int endId);
+        Task<IEnumerable<Meal>> GetInIdRangeAsync(int startId, int endId);
     }
 }

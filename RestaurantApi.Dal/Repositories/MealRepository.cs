@@ -15,24 +15,24 @@ namespace RestaurantApi.Dal.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Meal>> GetInIdRange(int startId, int endId)
+        public async Task<IEnumerable<Meal>> GetInIdRangeAsync(int startId, int endId)
         {
             return await _table.Where(item => item.Id >= startId && item.Id <= endId)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Meal>> GetAll()
+        public async Task<IEnumerable<Meal>> GetAllAsync()
         {
             return await _table.ToListAsync();
         }
 
-        public async Task<Meal> GetById(int id)
+        public async Task<Meal> GetByIdAsync(int id)
         {
             var entity = await _table.FindAsync(id);
             ThrowIfNull(entity!);
             return entity!;
         }
-        public async Task Add(Meal entity)
+        public async Task AddAsync(Meal entity)
         {
             ThrowIfNull(entity);
 
@@ -49,23 +49,23 @@ namespace RestaurantApi.Dal.Repositories
             await _table.AddAsync(resMeal);
         }
 
-        public async Task Update(Meal entity, int id)
+        public async Task UpdateAsync(Meal entity, int id)
         {
             ThrowIfNull(entity);
             var matchingIngredients = GetMatchingIngredientsFromTable(entity);
 
-            var tableEntity = await GetById(id);
+            var tableEntity = await GetByIdAsync(id);
             tableEntity.Id = entity.Id;
             tableEntity.Description = entity.Description;
             tableEntity.Name = entity.Name;
             tableEntity.Ingredients = matchingIngredients;
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
         }
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _table.FindAsync(id);
             ThrowIfNull(entity!);

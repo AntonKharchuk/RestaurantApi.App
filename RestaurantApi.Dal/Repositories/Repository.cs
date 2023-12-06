@@ -17,38 +17,43 @@ namespace RestaurantApi.Dal.Repositories
             _table = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _table.ToListAsync();
         }
 
-        public async Task<T> GetById(int id)
+        public async Task<T>? GetByIdAsync(int id)
         {
-            var entity = _table.FirstOrDefault((obj)=>obj.Id == id);
-            ThrowIfNull(entity);
-            return entity!;
+            return await _table.FirstOrDefaultAsync(g => g.Id == id);
         }
 
-        public async Task Add(T entity)
+        public async Task AddAsync(T entity)
         {
             ThrowIfNull(entity);
             await _table.AddAsync(entity);
         }
 
-        public async Task Update(T entity, int id)
+        public async Task UpdateAsync(T entity, int id)
         {
-            var tableEntity = await GetById(id);
+            ThrowIfNull(entity);
+            if (entity.Id!=id)
+            {
+                throw new ArgumentException(nameof(entity), "entity.Id and id missmatch");
+            }
+            var tableEntity = await GetByIdAsync(id);
+            ThrowIfNull(tableEntity);
             _context.Entry(tableEntity).CurrentValues.SetValues(entity);
         }
 
-        public async Task Save()
+        public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
         }
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var entity = await GetById(id);
-            _table.Remove(entity!);
+            var tableEntity = await GetByIdAsync(id);
+            ThrowIfNull(tableEntity);
+            _table.Remove(tableEntity);
         }
         private static void ThrowIfNull(T? entity)
         {

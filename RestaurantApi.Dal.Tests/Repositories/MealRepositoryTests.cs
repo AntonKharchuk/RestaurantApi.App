@@ -25,7 +25,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new MealRepository(_context);
-            await repository.Add(new Meal
+            await repository.AddAsync(new Meal
             {
                 Id = 1,
                 Name = "Meal1",
@@ -36,7 +36,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
                 Name = "Ingredient1"
             }},
             });
-            await repository.Add(new Meal
+            await repository.AddAsync(new Meal
             {
                 Id = 2,
                 Name = "Meal2",
@@ -47,10 +47,10 @@ namespace RestaurantApi.Dal.Tests.Repositories
                 Name = "Ingredient1"
             } },
             });
-            await repository.Save();
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetAll();
+            var result = await repository.GetAllAsync();
 
             // Assert
             Assert.Equal(2, result.Count());
@@ -61,7 +61,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new MealRepository(_context);
-            await repository.Add(new Meal
+            await repository.AddAsync(new Meal
             {
                 Id = 1,
                 Name = "Meal1",
@@ -72,7 +72,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
                 Name = "Ingredient1"
             }},
             });
-            await repository.Add(new Meal
+            await repository.AddAsync(new Meal
             {
                 Id = 2,
                 Name = "Meal2",
@@ -83,10 +83,10 @@ namespace RestaurantApi.Dal.Tests.Repositories
                 Name = "Ingredient2"
             } },
             });
-            await repository.Save();
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetAll();
+            var result = await repository.GetAllAsync();
 
             // Assert
             Assert.Contains(result, meal => meal.Id == 1 && meal.Name == "Meal1");
@@ -97,10 +97,10 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new MealRepository(_context);
-            await repository.Save();
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetAll();
+            var result = await repository.GetAllAsync();
 
             // Assert
             Assert.Empty(result);
@@ -111,11 +111,11 @@ namespace RestaurantApi.Dal.Tests.Repositories
             // Arrange
             var repository = new MealRepository(_context);
             var expectedEntity = new Meal { Id = 1, Name = "Meal1" };
-            await repository.Add(expectedEntity);
-            await repository.Save();
+            await repository.AddAsync(expectedEntity);
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetById(1);
+            var result = await repository.GetByIdAsync(1);
 
             // Assert
             Assert.NotNull(result);
@@ -130,7 +130,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
             var repository = new MealRepository(_context);
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetById(1));
+            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(1));
         }
 
         [Fact]
@@ -138,11 +138,11 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new MealRepository(_context);
-            await repository.Add(new Meal { Id = 1, Name = "Meal1" });
-            await repository.Save();
+            await repository.AddAsync(new Meal { Id = 1, Name = "Meal1" });
+            await repository.SaveAsync();
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetById(2));
+            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(2));
         }
 
         [Fact]
@@ -153,8 +153,8 @@ namespace RestaurantApi.Dal.Tests.Repositories
             var entity = new Meal { Id = 1, Name = "Meal1" };
 
             // Act
-            await repository.Add(entity);
-            await repository.Save();
+            await repository.AddAsync(entity);
+            await repository.SaveAsync();
 
             // Assert
             var result = _context.Set<Meal>().FirstOrDefault(e => e.Id == 1);
@@ -170,7 +170,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
             Meal entity = null!;
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.Add(entity));
+            await AssertThrowsArgumentNullExceptionAsync(repository.AddAsync    (entity));
         }
 
         [Fact]
@@ -179,15 +179,15 @@ namespace RestaurantApi.Dal.Tests.Repositories
             // Arrange
             var repository = new MealRepository(_context);
             var entity = new Meal { Id = 1, Name = "Meal1" };
-            await repository.Add(entity);
-            await repository.Save();
+            await repository.AddAsync(entity);
+            await repository.SaveAsync();
 
             var updatedEntity = new Meal { Id = 1, Name = "NewIngredient1" };
 
             // Act
 
-            await repository.Update(updatedEntity, 1);
-            await repository.Save();
+            await repository.UpdateAsync(updatedEntity, 1);
+            await repository.SaveAsync();
 
             // Assert
 
@@ -202,10 +202,10 @@ namespace RestaurantApi.Dal.Tests.Repositories
             // Arrange
             var repository = new MealRepository(_context);
             var entity = new Meal { Id = 1, Name = "Meal1" };
-            await repository.Add(entity);
+            await repository.AddAsync(entity);
 
             // Act
-            await repository.Save();
+            await repository.SaveAsync();
 
             // Assert
             var result = _context.Set<Meal>().FirstOrDefault(e => e.Id == 1);
@@ -218,13 +218,13 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new MealRepository(_context);
-            await repository.Add(new Meal { Id = 1, Name = "Meal1" });
-            await repository.Add(new Meal { Id = 2, Name = "Meal2" });
-            await repository.Add(new Meal { Id = 3, Name = "Meal3" });
-            await repository.Save();
+            await repository.AddAsync(new Meal { Id = 1, Name = "Meal1" });
+            await repository.AddAsync   (new Meal { Id = 2, Name = "Meal2" });
+            await repository.AddAsync(new Meal { Id = 3, Name = "Meal3" });
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetInIdRange(2, 3);
+            var result = await repository.GetInIdRangeAsync(2, 3);
 
             // Assert
             Assert.Equal(2, result.Count());
@@ -237,12 +237,12 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new MealRepository(_context);
-            await repository.Add(new Meal { Id = 1, Name = "Meal1" });
-            await repository.Add(new Meal { Id = 2, Name = "Meal2" });
-            await repository.Save();
+            await repository.AddAsync(new Meal { Id = 1, Name = "Meal1" });
+            await repository.AddAsync(new Meal { Id = 2, Name = "Meal2" });
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetInIdRange(3, 4);
+            var result = await repository.GetInIdRangeAsync(3, 4);
 
             // Assert
             Assert.Empty(result);

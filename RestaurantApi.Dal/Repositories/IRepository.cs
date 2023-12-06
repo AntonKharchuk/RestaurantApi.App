@@ -5,12 +5,12 @@ namespace RestaurantApi.Dal.Repositories
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> GetAll();
-        Task<T> GetById(int id);
-        Task Add(T entity);
-        Task Update(T entity, int id);
-        Task Delete(int id);
-        Task Save();
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T>? GetByIdAsync(int id);
+        Task AddAsync(T entity);
+        Task UpdateAsync(T entity, int id);
+        Task DeleteAsync(int id);
+        Task SaveAsync();
 
     }
 }

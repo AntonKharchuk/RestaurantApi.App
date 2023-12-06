@@ -26,12 +26,12 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new Repository<Ingredient>(_context);
-            await repository.Add(new Ingredient { Id = 1, Name = "Ingredient1" });
-            await repository.Add(new Ingredient { Id = 2, Name = "Ingredient2" });
-            await repository.Save();
+            await repository.AddAsync(new Ingredient { Id = 1, Name = "Ingredient1" });
+            await repository.AddAsync(new Ingredient { Id = 2, Name = "Ingredient2" });
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetAll();
+            var result = await repository.GetAllAsync();
 
             // Assert
             Assert.Equal(2, result.Count());
@@ -42,12 +42,12 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new Repository<Ingredient>(_context);
-            await repository.Add(new Ingredient { Id = 1, Name = "Ingredient1" });
-            await repository.Add(new Ingredient { Id = 2, Name = "Ingredient2" });
-            await repository.Save();
+            await repository.AddAsync(new Ingredient { Id = 1, Name = "Ingredient1" });
+            await repository.AddAsync(new Ingredient { Id = 2, Name = "Ingredient2" });
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetAll();
+            var result = await repository.GetAllAsync();
 
             // Assert
             Assert.Contains(result, ingredient => ingredient.Id == 1 && ingredient.Name == "Ingredient1");
@@ -58,10 +58,10 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new Repository<Ingredient>(_context);
-            await repository.Save();
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetAll();
+            var result = await repository.GetAllAsync();
 
             // Assert
             Assert.Empty(result);
@@ -72,11 +72,11 @@ namespace RestaurantApi.Dal.Tests.Repositories
             // Arrange
             var repository = new Repository<Ingredient>(_context);
             var expectedEntity = new Ingredient { Id = 1, Name = "Ingredient1" };
-            await repository.Add(expectedEntity);
-            await repository.Save();
+            await repository.AddAsync(expectedEntity);
+            await repository.SaveAsync();
 
             // Act
-            var result = await repository.GetById(1);
+            var result = await repository.GetByIdAsync(1);
 
             // Assert
             Assert.NotNull(result);
@@ -91,7 +91,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
             var repository = new Repository<Ingredient>(_context);
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetById(1));
+            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(1));
         }
 
         [Fact]
@@ -99,11 +99,11 @@ namespace RestaurantApi.Dal.Tests.Repositories
         {
             // Arrange
             var repository = new Repository<Ingredient>(_context);
-            await repository.Add(new Ingredient { Id = 1, Name = "Ingredient1" });
-            await repository.Save();
+            await repository.AddAsync(new Ingredient { Id = 1, Name = "Ingredient1" });
+            await repository.SaveAsync();
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetById(2));
+            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(2));
         }
 
         [Fact]
@@ -114,8 +114,8 @@ namespace RestaurantApi.Dal.Tests.Repositories
             var entity = new Ingredient { Id = 1, Name = "Ingredient1" };
 
             // Act
-            await repository.Add(entity);
-            await repository.Save();
+            await repository.AddAsync(entity);
+            await repository.SaveAsync();
 
             // Assert
             var result = _context.Set<Ingredient>().FirstOrDefault(e => e.Id == 1);
@@ -131,9 +131,9 @@ namespace RestaurantApi.Dal.Tests.Repositories
             var entity1 = new Ingredient { Id = 1, Name = "Ingredient1New" };
 
             // Act
-            await repository.Add(entity);
-            await repository.Add(entity1);
-            await repository.Save();
+            await repository.AddAsync(entity);
+            await repository.AddAsync(entity1);
+            await repository.SaveAsync();
 
             // Assert
             //var exeption = Record.Exception(act);
@@ -149,7 +149,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
             Ingredient entity = null!;
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.Add(entity));
+            await AssertThrowsArgumentNullExceptionAsync(repository.AddAsync(entity));
         }
 
         [Fact]
@@ -158,15 +158,15 @@ namespace RestaurantApi.Dal.Tests.Repositories
             // Arrange
             var repository = new Repository<Ingredient>(_context);
             var entity = new Ingredient { Id = 1, Name = "Ingredient1" };
-            await repository.Add(entity);
-            await repository.Save();
+            await repository.AddAsync(entity);
+            await repository.SaveAsync();
 
             var updatedEntity = new Ingredient { Id = 1, Name = "NewIngredient1" };
 
             // Act
 
-            await repository.Update(updatedEntity, 1);
-            await repository.Save();
+            await repository.UpdateAsync(updatedEntity, 1);
+            await repository.SaveAsync();
 
             // Assert
 
@@ -202,10 +202,10 @@ namespace RestaurantApi.Dal.Tests.Repositories
             // Arrange
             var repository = new Repository<Ingredient>(_context);
             var entity = new Ingredient { Id = 1, Name = "Ingredient1" };
-            await repository.Add(entity);
+            await repository.AddAsync       (entity);
 
             // Act
-            await repository.Save();
+            await repository.SaveAsync();
 
             // Assert
             var result = _context.Set<Ingredient>().FirstOrDefault(e => e.Id == 1);

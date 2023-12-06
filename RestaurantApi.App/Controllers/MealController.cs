@@ -18,7 +18,7 @@ namespace RestaurantApi.App.Controllers
         [HttpGet("Ingredients", Name = "GetAllIngredients")]
         public IEnumerable<Ingredient> GetAllIngredients()
         {
-            var asyncResult = _mealsService.IngredientService.GetAllItems();
+            var asyncResult = _mealsService.IngredientService.GetAllItemsAsync();
 
             var result = new List<Ingredient>();
 
@@ -34,21 +34,17 @@ namespace RestaurantApi.App.Controllers
         [HttpGet("Ingredients/{id}", Name = "GetIngredientById")]
         public async Task<ActionResult<Ingredient>> GetIngredientById(int id)
         {
-            try
-            {
-                var ingredient = await _mealsService.IngredientService.GetItemById(id);
-                return Parser.IngredientFromDALToApp(ingredient);
-            }
-            catch (Exception e)
-            {
-                return NotFound(e.Message);
-            }
+            var ingredient = await _mealsService.IngredientService.GetItemByIdAsync(id);
+            if (ingredient is null)
+                return NotFound();
+
+            return Parser.IngredientFromDALToApp(ingredient);
         }
 
         [HttpPost("Ingredients", Name = "CreateIngredient")]
         public async Task<ActionResult<Ingredient>> CreateIngredient(Ingredient ingredient)
         {
-            await _mealsService.IngredientService.CreateItem(Parser.IngredientFromAppToDAL(ingredient));
+            await _mealsService.IngredientService.CreateItemAsync(Parser.IngredientFromAppToDAL(ingredient));
 
             return CreatedAtRoute("CreateIngredient", new { id = ingredient.Id }, ingredient);
         }
@@ -58,7 +54,7 @@ namespace RestaurantApi.App.Controllers
         {
             try
             {
-                await _mealsService.IngredientService.UpdateItem(Parser.IngredientFromAppToDAL(ingredient), id);
+                await _mealsService.IngredientService.UpdateItemAsync(Parser.IngredientFromAppToDAL(ingredient), id);
             }
             catch (Exception e)
             {
@@ -73,7 +69,7 @@ namespace RestaurantApi.App.Controllers
         {
             try
             {
-                await _mealsService.IngredientService.DeleteItem(id);
+                await _mealsService.IngredientService.DeleteItemAsync(id);
             }
             catch (Exception e)
             {

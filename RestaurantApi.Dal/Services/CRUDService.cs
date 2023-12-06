@@ -13,32 +13,32 @@ namespace RestaurantApi.Dal.Services
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<IEnumerable<T>> GetAllItems()
+        public async Task<IEnumerable<T>> GetAllItemsAsync()
         {
-            return await _repository.GetAll();
+            return await _repository.GetAllAsync();
         }
 
-        public async Task<T> GetItemById(int id)
+        public async Task<T> GetItemByIdAsync(int id)
         {
-            return await _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public async Task CreateItem(T entity)
+        public async Task CreateItemAsync(T entity)
         {
-            await _repository.Add(entity);
-            await _repository.Save();
+            await _repository.AddAsync(entity);
+            await _repository.SaveAsync();
         }
 
-        public async Task UpdateItem(T entity, int id)
+        public async Task UpdateItemAsync(T entity, int id)
         {
-            await _repository.Update(entity, id);
-            await _repository.Save();
+            await _repository.UpdateAsync(entity, id);
+            await _repository.SaveAsync();
         }
 
-        public async Task DeleteItem(int id)
+        public async Task DeleteItemAsync(int id)
         {
-            await _repository.Delete(id);
-            await _repository.Save();
+            await _repository.DeleteAsync(id);
+            await _repository.SaveAsync();
         }
     }
 }

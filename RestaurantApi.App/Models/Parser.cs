@@ -6,6 +6,9 @@ namespace RestaurantApi.App.Models
     {
         public static Ingredient IngredientFromDALToApp(Dal.Models.Ingredient ingredient)
         {
+            if (ingredient is null)
+                return null;
+            
             return new Ingredient()
             {
                 Id = ingredient.Id,
@@ -14,6 +17,8 @@ namespace RestaurantApi.App.Models
         }
         public static Meal MealFromDALToApp(Dal.Models.Meal meal)
         {
+            if (meal is null)
+                return null;
             var result = new Meal()
             {
                 Id = meal.Id,
@@ -32,6 +37,8 @@ namespace RestaurantApi.App.Models
 
         public static Portion PortionFromDALToApp(Dal.Models.Portion portion)
         {
+            if (portion is null)
+                return null;
             return new Portion()
             {
                 Id = portion.Id,
@@ -41,6 +48,8 @@ namespace RestaurantApi.App.Models
 
         public static PriceListItem PriceListItemFromDALToApp(Dal.Models.PriceListItem priceListItem)
         {
+            if (priceListItem is null)
+                return null;
             return new PriceListItem()
             {
                 Id = priceListItem.Id,
@@ -55,6 +64,8 @@ namespace RestaurantApi.App.Models
 
         public static Order OrderFromDALToApp(Dal.Models.Order order)
         {
+            if (order is null)
+                return null;
             return new Order()
             {
                 Id = order.Id,
@@ -65,6 +76,8 @@ namespace RestaurantApi.App.Models
 
         public static OrderItem OrderItemFromDALToApp(Dal.Models.OrderItem orderItem)
         {
+            if (orderItem is null)
+                return null;
             return new OrderItem()
             {
                 Id = orderItem.Id,
@@ -79,6 +92,8 @@ namespace RestaurantApi.App.Models
 
         public static Dal.Models.Ingredient IngredientFromAppToDAL(Ingredient ingredient)
         {
+            if (ingredient is null)
+                return null;
             return new Dal.Models.Ingredient()
             {
                 Id = ingredient.Id,
@@ -88,6 +103,8 @@ namespace RestaurantApi.App.Models
 
         public static Dal.Models.Meal MealFromAppToDAL(Meal meal)
         {
+            if (meal is null)
+                return null;
             var result = new Dal.Models.Meal()
             {
                 Id = meal.Id,
@@ -106,6 +123,8 @@ namespace RestaurantApi.App.Models
 
         public static Dal.Models.Portion PortionFromAppToDAL(Portion portion)
         {
+            if (portion is null)
+                return null;
             return new Dal.Models.Portion()
             {
                 Id = portion.Id,
@@ -115,6 +134,8 @@ namespace RestaurantApi.App.Models
 
         public static Dal.Models.PriceListItem PriceListItemFromAppToDAL(PriceListItem priceListItem)
         {
+            if (priceListItem is null)
+                return null;
             return new Dal.Models.PriceListItem()
             {
                 Id = priceListItem.Id,
@@ -129,6 +150,8 @@ namespace RestaurantApi.App.Models
 
         public static Dal.Models.Order OrderFromAppToDAL(Order order)
         {
+            if (order is null)
+                return null;
             return new Dal.Models.Order()
             {
                 Id = order.Id,
@@ -139,6 +162,8 @@ namespace RestaurantApi.App.Models
 
         public static Dal.Models.OrderItem OrderItemFromAppToDAL(OrderItem orderItem)
         {
+            if (orderItem is null)
+                return null;
             return new Dal.Models.OrderItem()
             {
                 Id = orderItem.Id,

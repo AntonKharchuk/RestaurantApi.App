@@ -5,10 +5,10 @@ namespace RestaurantApi.Dal.Services
 {
     public interface ICRUDService<T> where T : BaseEntity
     {
-        Task<IEnumerable<T>> GetAllItems();
-        Task<T> GetItemById(int id);
-        Task CreateItem(T entity);
-        Task UpdateItem(T entity, int id);
-        Task DeleteItem(int id);
+        Task<IEnumerable<T>> GetAllItemsAsync();
+        Task<T> GetItemByIdAsync(int id);
+        Task CreateItemAsync(T entity);
+        Task UpdateItemAsync(T entity, int id);
+        Task DeleteItemAsync(int id);
     }
 }
