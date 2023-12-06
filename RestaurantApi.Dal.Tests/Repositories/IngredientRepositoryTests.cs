@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using RestaurantApi.Dal.Models;
 using RestaurantApi.Dal.Repositories;
 
+using System.Threading.Tasks;
+
 namespace RestaurantApi.Dal.Tests.Repositories
 {
     public class IngredientRepositoryTests : IDisposable
@@ -201,6 +203,33 @@ namespace RestaurantApi.Dal.Tests.Repositories
             var result = _context.Set<Ingredient>().FirstOrDefault(e => e.Id == 1);
             Assert.NotNull(result);
             Assert.Equal(entity.Name, result.Name);
+        }
+        [Fact]
+        public async Task Delete_DeletesExistingEntity()
+        {
+            // Arrange
+            var repository = new Repository<Ingredient>(_context);
+            var entity = new Ingredient { Id = 1, Name = "Ingredient1" };
+            await repository.AddAsync(entity);
+            await repository.SaveAsync();
+
+            // Act
+            await repository.DeleteAsync(1);
+            await repository.SaveAsync();
+            // Assert
+            var result = _context.Set<Ingredient>().FirstOrDefault(e => e.Id == 1);
+            Assert.Null(result);
+        }
+        [Fact]
+        public async Task Delete_ThrowsArgumentNullExceptionWhileDeletesNotExistingEntity()
+        {
+            // Arrange
+            var repository = new Repository<Ingredient>(_context);
+            
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(
+               async () => await repository.DeleteAsync(1));
         }
 
         public void Dispose()

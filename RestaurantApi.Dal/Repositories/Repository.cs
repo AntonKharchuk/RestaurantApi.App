@@ -22,7 +22,7 @@ namespace RestaurantApi.Dal.Repositories
             return await _table.ToListAsync();
         }
 
-        public async Task<T>? GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id)
         {
             return await _table.FirstOrDefaultAsync(g => g.Id == id);
         }

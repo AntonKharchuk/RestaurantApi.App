@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantApi.Dal.Models;
 
+using System.Text;
+
 namespace RestaurantApi.Dal.Repositories
 {
     public class MealRepository : IMealRepository
@@ -28,37 +30,43 @@ namespace RestaurantApi.Dal.Repositories
 
         public async Task<Meal> GetByIdAsync(int id)
         {
-            var entity = await _table.FindAsync(id);
-            ThrowIfNull(entity!);
-            return entity!;
+            return await _table.FirstOrDefaultAsync(g => g.Id == id);
         }
         public async Task AddAsync(Meal entity)
         {
             ThrowIfNull(entity);
-
-            var matchingIngredients = GetMatchingIngredientsFromTable(entity);
-
             var resMeal = new Meal()
             {
                 Id = entity.Id,
                 Description = entity.Description,
                 Name = entity.Name,
-                Ingredients = matchingIngredients,
             };
-
+            if (entity.Ingredients is not null)
+            {
+                var matchingIngredients = GetMatchingIngredientsFromTable(entity);
+                resMeal.Ingredients = matchingIngredients;
+            }
+           
             await _table.AddAsync(resMeal);
         }
 
         public async Task UpdateAsync(Meal entity, int id)
         {
             ThrowIfNull(entity);
-            var matchingIngredients = GetMatchingIngredientsFromTable(entity);
-
+            if (entity.Id != id)
+            {
+                throw new ArgumentException(nameof(entity), "entity.Id and id missmatch");
+            }
             var tableEntity = await GetByIdAsync(id);
             tableEntity.Id = entity.Id;
             tableEntity.Description = entity.Description;
             tableEntity.Name = entity.Name;
-            tableEntity.Ingredients = matchingIngredients;
+
+            if (entity.Ingredients is not null)
+            {
+                var matchingIngredients = GetMatchingIngredientsFromTable(entity);
+                tableEntity.Ingredients = matchingIngredients;
+            }
         }
 
         public async Task SaveAsync()
@@ -67,13 +75,12 @@ namespace RestaurantApi.Dal.Repositories
         }
         public async Task DeleteAsync(int id)
         {
-            var entity = await _table.FindAsync(id);
-            ThrowIfNull(entity!);
-            _table.Remove(entity!);
+            var entity = await GetByIdAsync(id);
+            ThrowIfNull(entity);
+            _table.Remove(entity);
         }
         private List<Ingredient> GetMatchingIngredientsFromTable(Meal entity)
         {
-            ThrowIfNull(entity.Ingredients!);
             var ingredientIds = entity.Ingredients!.Select(i => i.Id).ToList();
 
             return _context.Ingredients
