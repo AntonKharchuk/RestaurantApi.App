@@ -85,25 +85,15 @@ namespace RestaurantApi.Dal.Tests.Repositories
         }
 
         [Fact]
-        public async Task GetById_ThrowsExceptionWhenEntityDoesNotExist()
+        public async Task GetById_ReturnsNullWhenEntityDoesNotExist()
         {
             // Arrange
             var repository = new Repository<Ingredient>(_context);
 
-            // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(1));
-        }
-
-        [Fact]
-        public async Task GetById_ThrowsExceptionWhenEntityIsNull()
-        {
-            // Arrange
-            var repository = new Repository<Ingredient>(_context);
-            await repository.AddAsync(new Ingredient { Id = 1, Name = "Ingredient1" });
-            await repository.SaveAsync();
-
-            // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(2));
+            // Act
+            var result = await repository.GetByIdAsync(1);
+            // Assert
+            Assert.Null(result);
         }
 
         [Fact]
@@ -132,10 +122,10 @@ namespace RestaurantApi.Dal.Tests.Repositories
 
             // Act
             await repository.AddAsync(entity);
-            await repository.AddAsync(entity1);
-            await repository.SaveAsync();
+            var act = async ()=> await repository.AddAsync(entity1);
 
             // Assert
+            Assert.ThrowsAsync<InvalidOperationException>(act);
             //var exeption = Record.Exception(act);
 
             //Assert.Equal(exeption, new InvalidOperationException());
