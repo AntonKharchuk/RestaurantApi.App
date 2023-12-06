@@ -132,6 +132,26 @@ namespace RestaurantApi.Dal.Tests.Repositories
 
             //Assert.Equal(exeption, new InvalidOperationException());
         }
+        [Fact]
+        public async Task Add_ThrowsExeptionWhileAddingEntityWithIdBetweenExistedIds()
+        {
+            // Arrange
+            var repository = new Repository<Ingredient>(_context);
+            var entity1 = new Ingredient { Id = 1, Name = "Ingredient1" };
+            var entity3 = new Ingredient { Id = 3, Name = "Ingredient3" };
+            var entity2 = new Ingredient { Id = 2, Name = "Ingredient2New" };
+            await repository.AddAsync(entity1);
+            await repository.AddAsync(entity3);
+
+            // Act
+            var act = async () => await repository.AddAsync(entity2);
+
+            // Assert
+            Assert.ThrowsAsync<InvalidOperationException>(act);
+            //var exeption = Record.Exception(act);
+
+            //Assert.Equal(exeption, new InvalidOperationException());
+        }
 
         [Fact]
         public async Task Add_ThrowsArgumentNullExceptionWhenEntityIsNull()
