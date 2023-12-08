@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 
+using RestaurantApi.Dal.Exeptions;
 using RestaurantApi.Dal.Models;
 
 namespace RestaurantApi.Dal.Repositories
@@ -59,7 +60,7 @@ namespace RestaurantApi.Dal.Repositories
         {
             if (entity is null)
             {
-                throw new ArgumentNullException(nameof(entity), "Entity with the specified ID not found.");
+                throw new EntityNotFoundException("Entity with the specified ID not found.");
             }
         }
     }
