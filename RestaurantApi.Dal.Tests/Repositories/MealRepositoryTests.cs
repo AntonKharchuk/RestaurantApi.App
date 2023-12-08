@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 
+using RestaurantApi.Dal.Exeptions;
 using RestaurantApi.Dal.Models;
 using RestaurantApi.Dal.Repositories;
 
@@ -124,25 +125,14 @@ namespace RestaurantApi.Dal.Tests.Repositories
         }
 
         [Fact]
-        public async Task GetById_ThrowsExceptionWhenEntityDoesNotExist()
+        public async Task GetById_ReturnsNullWhenEntityDoesNotExist()
         {
             // Arrange
             var repository = new MealRepository(_context);
-
-            // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(1));
-        }
-
-        [Fact]
-        public async Task GetById_ThrowsExceptionWhenEntityIsNull()
-        {
-            // Arrange
-            var repository = new MealRepository(_context);
-            await repository.AddAsync(new Meal { Id = 1, Name = "Meal1" });
-            await repository.SaveAsync();
-
-            // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.GetByIdAsync(2));
+            // Act
+            var entity =  await repository.GetByIdAsync(1);
+            // Assert
+            Assert.Null(entity);
         }
 
         [Fact]
@@ -163,14 +153,14 @@ namespace RestaurantApi.Dal.Tests.Repositories
         }
 
         [Fact]
-        public async Task Add_ThrowsArgumentNullExceptionWhenEntityIsNull()
+        public async Task Add_ThrowsEntityNotFoundExceptionWhenEntityIsNull()
         {
             // Arrange
             var repository = new MealRepository(_context);
             Meal entity = null!;
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.AddAsync    (entity));
+            await AssertThrowsEntityNotFoundExceptionAsync(repository.AddAsync    (entity));
         }
 
         [Fact]
@@ -254,9 +244,9 @@ namespace RestaurantApi.Dal.Tests.Repositories
             _context.Dispose();
         }
 
-        private async Task AssertThrowsArgumentNullExceptionAsync(Task task)
+        private async Task AssertThrowsEntityNotFoundExceptionAsync(Task task)
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(
+            await Assert.ThrowsAsync<EntityNotFoundException>(
                 async () => await task);
         }
     }

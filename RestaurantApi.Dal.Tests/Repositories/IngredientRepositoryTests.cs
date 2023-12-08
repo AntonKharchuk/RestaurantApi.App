@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
+using RestaurantApi.Dal.Exeptions;
 using RestaurantApi.Dal.Models;
 using RestaurantApi.Dal.Repositories;
 
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace RestaurantApi.Dal.Tests.Repositories
@@ -154,14 +156,14 @@ namespace RestaurantApi.Dal.Tests.Repositories
         }
 
         [Fact]
-        public async Task Add_ThrowsArgumentNullExceptionWhenEntityIsNull()
+        public async Task Add_ThrowsEntityNotFoundExceptionWhenEntityIsNull()
         {
             // Arrange
             var repository = new Repository<Ingredient>(_context);
             Ingredient entity = null!;
 
             // Act & Assert
-            await AssertThrowsArgumentNullExceptionAsync(repository.AddAsync(entity));
+            await AssertThrowsEntityNotFoundExceptionAsync(repository.AddAsync(entity));
         }
 
         [Fact]
@@ -187,26 +189,7 @@ namespace RestaurantApi.Dal.Tests.Repositories
             Assert.Equal(updatedEntity.Name, result.Name);
         }
 
-        //[Fact]
-        //public async Task Update_ThrowsExceptionWhenIdAndIngredientIdMissmatch()
-        //{
-        //    // Arrange
-        //    var repository = new Repository<Ingredient>(_context);
-        //    var entity1 = new Ingredient { Id = 1, Name = "Ingredient1" };
-        //    var entity2 = new Ingredient { Id = 2, Name = "Ingredient2" };
-        //    await repository.Add(entity1);
-        //    await repository.Add(entity2);
-        //    await repository.Save();
 
-        //    var updatedEntity = new Ingredient { Id = 1, Name = "NewIngredient1" };
-
-        //    //Act 
-
-        //    Action act = async () => await repository.Update(updatedEntity, 2);
-        //    //assert
-
-        //    var ex = Record.Exception(act);
-        //}
 
         [Fact]
         public async Task Save_PersistsChangesToDatabase()
@@ -241,16 +224,89 @@ namespace RestaurantApi.Dal.Tests.Repositories
             Assert.Null(result);
         }
         [Fact]
-        public async Task Delete_ThrowsArgumentNullExceptionWhileDeletesNotExistingEntity()
+        public async Task Delete_ThrowsEntityNotFoundExceptionWhileDeletesNotExistingEntity()
         {
             // Arrange
             var repository = new Repository<Ingredient>(_context);
             
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(
+            await Assert.ThrowsAsync<EntityNotFoundException>(
                async () => await repository.DeleteAsync(1));
         }
+        [Fact]
+        public async Task Add_CreatesItemAfterDeletingOne()
+        {
+            // Arrange
+            var repository = new Repository<Ingredient>(_context);
+            var entity1 = new Ingredient { Id = 1, Name = "Ingredient1" };
+            var entity2 = new Ingredient { Id = 2, Name = "Ingredient2" };
+            await repository.AddAsync(entity1);
+            await repository.AddAsync(entity2);
+            await repository.SaveAsync();
+
+            // Act
+            var entity1New = new Ingredient { Id = 1, Name = "Ingredient1" };
+            await repository.DeleteAsync(1);
+            await repository.SaveAsync();
+
+            await repository.AddAsync(entity1New);
+            await repository.SaveAsync();
+
+            var addedItem =  await repository.GetByIdAsync(1);
+            // Assert
+            Assert.Equal(addedItem.Name, entity1New.Name);
+        }
+
+        [Fact]
+        public async Task Add_AddsBetweenTwoIds()
+        {
+            // Arrange
+            var repository = new Repository<Ingredient>(_context);
+            var entity1 = new Ingredient { Id = 1, Name = "Ingredient1" };
+            var entity3 = new Ingredient { Id = 3, Name = "Ingredient3" };
+            await repository.AddAsync(entity1);
+            await repository.AddAsync(entity3);
+            await repository.SaveAsync();
+            var entity = new Ingredient { Name = "Ingredient4" };
+            await repository.AddAsync(entity);
+            await repository.SaveAsync();
+
+
+            // Act
+            var entity2New = new Ingredient { Id = 2, Name = "Ingredient2" };
+            await repository.AddAsync(entity2New);
+            await repository.SaveAsync();
+
+            var addedItem = await repository.GetByIdAsync(2);
+            // Assert
+            Assert.Equal(addedItem.Name, entity2New.Name);
+        }
+
+        [Fact]
+        public async Task Add_AddsItemWithIdEqualsIncrementedMaxId()
+        {
+            // Arrange
+            var repository = new Repository<Ingredient>(_context);
+            var entity1 = new Ingredient { Id = 1, Name = "Ingredient1" };
+            var entity3 = new Ingredient { Id = 3, Name = "Ingredient3" };
+            await repository.AddAsync(entity1);
+            await repository.AddAsync(entity3);
+            await repository.SaveAsync();
+
+            // Act
+            var entity = new Ingredient { Name = "Ingredient4" };
+            await repository.AddAsync(entity);
+            await repository.SaveAsync();
+
+            var addedItem = await repository.GetByIdAsync(4);
+            // Assert
+            Assert.Equal(addedItem.Name, entity.Name);
+            Assert.Equal(addedItem.Id, entity3.Id+1);
+        }
+
+
+
 
         public void Dispose()
         {
@@ -258,9 +314,9 @@ namespace RestaurantApi.Dal.Tests.Repositories
             _context.Dispose();
         }
 
-        private async Task AssertThrowsArgumentNullExceptionAsync(Task task)
+        private async Task AssertThrowsEntityNotFoundExceptionAsync(Task task)
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(
+            await Assert.ThrowsAsync<EntityNotFoundException>(
                 async () => await task);
         }
 
