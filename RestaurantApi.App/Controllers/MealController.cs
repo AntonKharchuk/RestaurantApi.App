@@ -52,30 +52,20 @@ namespace RestaurantApi.App.Controllers
         [HttpPut("Ingredients", Name = "UpdateIngredient")]
         public async Task<IActionResult> UpdateIngredient([FromQuery] int id, [FromBody] Ingredient ingredient)
         {
-            try
-            {
+            
                 await _mealsService.IngredientService.UpdateItemAsync(Parser.IngredientFromAppToDAL(ingredient), id);
-            }
-            catch (Exception e)
-            {
-                return NotFound(e.Message);
-            }
+           
 
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("Ingredients/{id}", Name = "DeleteIngredient")]
         public async Task<IActionResult> DeleteIngredient(int id)
         {
-            try
-            {
+           
                 await _mealsService.IngredientService.DeleteItemAsync(id);
-            }
-            catch (Exception e)
-            {
-                return NotFound(e.Message);
-            }
-            return NoContent();
+          
+            return Ok();
         }
 
     }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using RestaurantApi.App.Middleware;
 using RestaurantApi.App.RestaurantApi.App;
 using RestaurantApi.Dal;
 
@@ -15,11 +16,16 @@ builder.Services.AddDbContext<RestaurantDbContext>(options =>
 
 builder.Services.ConfigureRestaurantServices();
 
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -29,7 +35,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//My middlewares
+
+
 app.UseAuthorization();
+
 
 app.MapControllers();
 
