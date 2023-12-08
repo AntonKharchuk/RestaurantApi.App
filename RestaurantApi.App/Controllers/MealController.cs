@@ -52,9 +52,7 @@ namespace RestaurantApi.App.Controllers
         [HttpPut("Ingredients", Name = "UpdateIngredient")]
         public async Task<IActionResult> UpdateIngredient([FromQuery] int id, [FromBody] Ingredient ingredient)
         {
-            
-                await _mealsService.IngredientService.UpdateItemAsync(Parser.IngredientFromAppToDAL(ingredient), id);
-           
+            await _mealsService.IngredientService.UpdateItemAsync(Parser.IngredientFromAppToDAL(ingredient), id);
 
             return Ok();
         }
@@ -62,9 +60,8 @@ namespace RestaurantApi.App.Controllers
         [HttpDelete("Ingredients/{id}", Name = "DeleteIngredient")]
         public async Task<IActionResult> DeleteIngredient(int id)
         {
-           
-                await _mealsService.IngredientService.DeleteItemAsync(id);
-          
+            await _mealsService.IngredientService.DeleteItemAsync(id);
+
             return Ok();
         }
 
