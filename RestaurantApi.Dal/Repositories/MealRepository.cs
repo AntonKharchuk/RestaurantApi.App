@@ -19,19 +19,32 @@ namespace RestaurantApi.Dal.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Meal>> GetInIdRangeAsync(int startId, int endId)
+        public async Task<IEnumerable<Meal>> GetInIdRangeAsync(int startId, int endId, string include = "")
         {
+            if (!string.IsNullOrEmpty(include))
+            {
+                return await _table.Where(item => item.Id >= startId && item.Id <= endId).Include(include)
+               .ToListAsync();
+            }
             return await _table.Where(item => item.Id >= startId && item.Id <= endId)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Meal>> GetAllAsync()
+        public async Task<IEnumerable<Meal>> GetAllAsync(string include="")
         {
+            if (!string.IsNullOrEmpty(include))
+            {
+                return await _table.Include(include).ToListAsync();
+            }
             return await _table.ToListAsync();
         }
 
-        public async Task<Meal> GetByIdAsync(int id)
+        public async Task<Meal> GetByIdAsync(int id, string include = "")
         {
+            if (!string.IsNullOrEmpty(include))
+            {
+                return await _table.Include(include).FirstOrDefaultAsync(g => g.Id == id);
+            }
             return await _table.FirstOrDefaultAsync(g => g.Id == id);
         }
         public async Task AddAsync(Meal entity)
@@ -42,11 +55,15 @@ namespace RestaurantApi.Dal.Repositories
                 Id = entity.Id,
                 Description = entity.Description,
                 Name = entity.Name,
+                Ingredients  = new List<Ingredient> { }
             };
             if (entity.Ingredients is not null)
             {
                 var matchingIngredients = GetMatchingIngredientsFromTable(entity);
-                resMeal.Ingredients = matchingIngredients;
+                foreach (var ingredient in GetMatchingIngredientsFromTable(entity))
+                {
+                    resMeal.Ingredients.Add(ingredient);
+                }
             }
            
             await _table.AddAsync(resMeal);

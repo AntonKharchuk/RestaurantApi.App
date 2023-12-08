@@ -18,13 +18,21 @@ namespace RestaurantApi.Dal.Repositories
             _table = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(string include = "")
         {
+            if (!string.IsNullOrEmpty(include))
+            {
+                return await _table.Include(include).ToListAsync();
+            }
             return await _table.ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id, string include = "")
         {
+            if (!string.IsNullOrEmpty(include))
+            {
+                return await _table.Include(include).FirstOrDefaultAsync(g => g.Id == id);
+            }
             return await _table.FirstOrDefaultAsync(g => g.Id == id);
         }
 

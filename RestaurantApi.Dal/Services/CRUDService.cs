@@ -13,14 +13,14 @@ namespace RestaurantApi.Dal.Services
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<IEnumerable<T>> GetAllItemsAsync()
+        public async Task<IEnumerable<T>> GetAllItemsAsync(string include = "")
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(include);
         }
 
-        public async Task<T> GetItemByIdAsync(int id)
+        public async Task<T> GetItemByIdAsync(int id, string include = "")
         {
-            return await _repository.GetByIdAsync(id);
+            return await _repository.GetByIdAsync(id, include);
         }
 
         public async Task CreateItemAsync(T entity)

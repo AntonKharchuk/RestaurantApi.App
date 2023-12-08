@@ -16,13 +16,13 @@ namespace RestaurantApi.App.Controllers
         }
 
         [HttpGet("Ingredients", Name = "GetAllIngredients")]
-        public IEnumerable<Ingredient> GetAllIngredients()
+        public async Task<IEnumerable<Ingredient>> GetAllIngredients()
         {
             var asyncResult = _mealsService.IngredientService.GetAllItemsAsync();
 
             var result = new List<Ingredient>();
 
-            foreach (var item in asyncResult.Result)
+            foreach (var item in await asyncResult)
             {
                 result.Add(Parser.IngredientFromDALToApp(item));
             }
@@ -61,6 +61,70 @@ namespace RestaurantApi.App.Controllers
         public async Task<IActionResult> DeleteIngredient(int id)
         {
             await _mealsService.IngredientService.DeleteItemAsync(id);
+
+            return Ok();
+        }
+
+
+        [HttpGet("Meals", Name = "GetAllMeals")]
+        public async Task<IEnumerable<Meal>> GetAllMeals([FromQuery] string includePath = "")
+        {
+            var asyncResult = _mealsService.MealService.GetAllItemsAsync(includePath);
+
+            var result = new List<Meal>();
+
+            foreach (var item in await asyncResult)
+            {
+                result.Add(Parser.MealFromDALToApp(item));
+            }
+
+            return result;
+        }
+
+        [HttpGet("Meals/{id}", Name = "GetMealById")]
+        public async Task<ActionResult<Meal>> GetMealById(int id, [FromQuery] string includePath = "")
+        {
+            var meal = await _mealsService.MealService.GetItemByIdAsync(id, includePath);
+            if (meal is null)
+                return NotFound();
+
+            return Parser.MealFromDALToApp(meal);
+        }
+        [HttpGet("Meals/Page/{num}", Name = "GetMealByPage")]
+        public async Task<IEnumerable<Meal>> GetMealByPage(int num, [FromQuery] string includePath = "")
+        {
+            var asyncResult = _mealsService.MealService.GetItemsInRange(10*(num-1), 10*(num), includePath);
+
+            var result = new List<Meal>();
+
+            foreach (var item in asyncResult.Result)
+            {
+                result.Add(Parser.MealFromDALToApp(item));
+            }
+
+            return result;
+        }
+
+        [HttpPost("Meals", Name = "CreateMeal")]
+        public async Task<ActionResult<Meal>> CreateMeal(Meal meal)
+        {
+            await _mealsService.MealService.CreateItemAsync(Parser.MealFromAppToDAL(meal));
+
+            return CreatedAtRoute("CreateMeal", new { id = meal.Id }, meal);
+        }
+
+        [HttpPut("Meals/{id}", Name = "UpdateMeal")]
+        public async Task<IActionResult> UpdateMeal(int id, Meal meal)
+        {
+            await _mealsService.MealService.UpdateItemAsync(Parser.MealFromAppToDAL(meal), id);
+
+            return Ok();
+        }
+
+        [HttpDelete("Meals/{id}", Name = "DeleteMeal")]
+        public async Task<IActionResult> DeleteMeal(int id)
+        {
+            await _mealsService.MealService.DeleteItemAsync(id);
 
             return Ok();
         }
