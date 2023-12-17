@@ -21,28 +21,15 @@ namespace RestaurantApi.Dal.Repositories
         public async Task<IEnumerable<T>> GetAllAsync(string includes = "")
         {
             var query = _table.AsQueryable();
-
-            if (!string.IsNullOrEmpty(includes))
-            {
-                foreach (var include in includes.Split(","))
-                {
-                    query = query.Include(include);
-                }
-            }
-            return await query.ToListAsync(); 
+            query = IncludeFields(includes, query);
+            return await query.ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(int id, string includes = "")
         {
             var query = _table.AsQueryable();
 
-            if (!string.IsNullOrEmpty(includes))
-            {
-                foreach (var include in includes.Split(","))
-                {
-                    query = query.Include(include);
-                }
-            }
+            query = IncludeFields(includes, query);
 
             return await query.FirstOrDefaultAsync(g => g.Id == id);
         }
@@ -81,6 +68,18 @@ namespace RestaurantApi.Dal.Repositories
             {
                 throw new EntityNotFoundException("Entity with the specified ID not found.");
             }
+        }
+        private static IQueryable<T> IncludeFields(string includes, IQueryable<T> query)
+        {
+            if (!string.IsNullOrEmpty(includes))
+            {
+                foreach (var include in includes.Split(","))
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return query;
         }
     }
 }
