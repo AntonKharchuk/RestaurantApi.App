@@ -126,7 +126,7 @@ public class IngredientRepositoryTests : IDisposable
 
         // Act
         await repository.AddAsync(entity);
-        var act = async ()=> await repository.AddAsync(entity1);
+        var act = async () => await repository.AddAsync(entity1);
 
         // Assert
         Assert.ThrowsAsync<InvalidOperationException>(act);
@@ -188,7 +188,21 @@ public class IngredientRepositoryTests : IDisposable
         Assert.NotNull(result);
         Assert.Equal(updatedEntity.Name, result.Name);
     }
+    [Fact]
+    public async Task UpdateAsync_ThrowsArgumentExceptionWhenIdMismatch()
+    {
+        // Arrange
+        var repository = new Repository<Ingredient>(_context);
+        var entity = new Ingredient { Id = 1, Name = "Ingredient1" };
+        await repository.AddAsync(entity);
+        await repository.SaveAsync();
 
+        var updatedEntity = new Ingredient { Id = 2, Name = "NewIngredient" }; // Mismatched Id
+
+        // Act + Assert
+        await Assert.ThrowsAsync<ArgumentException>(
+            async () => await repository.UpdateAsync(updatedEntity, 1));
+    }
 
 
     [Fact]
@@ -197,7 +211,7 @@ public class IngredientRepositoryTests : IDisposable
         // Arrange
         var repository = new Repository<Ingredient>(_context);
         var entity = new Ingredient { Id = 1, Name = "Ingredient1" };
-        await repository.AddAsync       (entity);
+        await repository.AddAsync(entity);
 
         // Act
         await repository.SaveAsync();
@@ -228,7 +242,7 @@ public class IngredientRepositoryTests : IDisposable
     {
         // Arrange
         var repository = new Repository<Ingredient>(_context);
-        
+
         // Act
         // Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(
@@ -253,7 +267,7 @@ public class IngredientRepositoryTests : IDisposable
         await repository.AddAsync(entity1New);
         await repository.SaveAsync();
 
-        var addedItem =  await repository.GetByIdAsync(1);
+        var addedItem = await repository.GetByIdAsync(1);
         // Assert
         Assert.Equal(addedItem.Name, entity1New.Name);
     }
@@ -302,7 +316,7 @@ public class IngredientRepositoryTests : IDisposable
         var addedItem = await repository.GetByIdAsync(4);
         // Assert
         Assert.Equal(addedItem.Name, entity.Name);
-        Assert.Equal(addedItem.Id, entity3.Id+1);
+        Assert.Equal(addedItem.Id, entity3.Id + 1);
     }
 
 
