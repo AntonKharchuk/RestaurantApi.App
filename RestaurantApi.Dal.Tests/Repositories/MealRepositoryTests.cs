@@ -238,6 +238,75 @@ public class MealRepositoryTests : IDisposable
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task GetById_ReturnsEntityWithIncludesWhenExists()
+    {
+        // Arrange
+        var ingredientRepository = new Repository<Ingredient>(_context);
+
+        var ingredientEntity = new Ingredient()
+        {
+            Id = 1,
+            Name = "name",
+        };
+
+        await ingredientRepository.AddAsync(ingredientEntity);
+        await ingredientRepository.SaveAsync();
+
+        var mealRepository = new MealRepository(_context);
+        var expectedEntity = new Meal
+        {
+            Id = 1,
+            Ingredients = new List<Ingredient> {  ingredientEntity }
+        };
+        await mealRepository.AddAsync(expectedEntity);
+        await mealRepository.SaveAsync();
+
+        string includesString = "Ingredients";
+
+        // Act
+        var result = await mealRepository.GetByIdAsync(expectedEntity.Id, includesString);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedEntity.Id, result.Id);
+        Assert.NotNull(result.Ingredients);
+        Assert.Equal(result.Ingredients.Count, 1);
+        Assert.Equal(expectedEntity.Ingredients[0], ingredientEntity);
+    }
+
+    [Fact]
+    public async Task GetById_ThrowsExeptionWhenInludeStringIsInvalidExists()
+    {
+        // Arrange
+        var ingredientRepository = new Repository<Ingredient>(_context);
+
+        var ingredientEntity = new Ingredient()
+        {
+            Id = 1,
+            Name = "name",
+        };
+
+        await ingredientRepository.AddAsync(ingredientEntity);
+        await ingredientRepository.SaveAsync();
+
+        var mealRepository = new MealRepository(_context);
+        var expectedEntity = new Meal
+        {
+            Id = 1,
+            Ingredients = new List<Ingredient> { ingredientEntity }
+        };
+        await mealRepository.AddAsync(expectedEntity);
+        await mealRepository.SaveAsync();
+
+
+        string includesString = "InvalidStiring";
+
+        // Act + Assert
+
+        AssertThrowsInvalidOperationExceptionAsync(mealRepository.GetByIdAsync(expectedEntity.Id, includesString));
+    }
+
     public void Dispose()
     {
         // Clean up the in-memory database after each test
@@ -247,6 +316,11 @@ public class MealRepositoryTests : IDisposable
     private async Task AssertThrowsEntityNotFoundExceptionAsync(Task task)
     {
         await Assert.ThrowsAsync<EntityNotFoundException>(
+            async () => await task);
+    }
+    private async Task AssertThrowsInvalidOperationExceptionAsync(Task task)
+    {
+        await Assert.ThrowsAsync<InvalidOperationException>(
             async () => await task);
     }
 }
