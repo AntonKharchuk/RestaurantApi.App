@@ -93,7 +93,7 @@ namespace RestaurantApi.App.Controllers
         [HttpGet("Meals/Page/{num}", Name = "GetMealByPage")]
         public async Task<IEnumerable<Meal>> GetMealByPage(int num, [FromQuery] string includePath = "")
         {
-            var asyncResult = _mealsService.MealService.GetItemsInRange(10*(num-1), 10*(num), includePath);
+            var asyncResult = _mealsService.MealService.GetItemsInRangeAsync(10*(num-1), 10*(num), includePath);
 
             var result = new List<Meal>();
 
@@ -129,5 +129,101 @@ namespace RestaurantApi.App.Controllers
             return Ok();
         }
 
+        [HttpGet("Portions", Name = "GetAllPortions")]
+        public async Task<IEnumerable<Portion>> GetAllPortions()
+        {
+            var asyncResult = _mealsService.PortionService.GetAllItemsAsync();
+
+            var result = new List<Portion>();
+
+            foreach (var item in await asyncResult)
+            {
+                result.Add(Parser.PortionFromDALToApp(item));
+            }
+
+            return result;
+        }
+
+        [HttpGet("Portions/{id}", Name = "GetPortionById")]
+        public async Task<ActionResult<Portion>> GetPortionById(int id)
+        {
+            var portion = await _mealsService.PortionService.GetItemByIdAsync(id);
+            if (portion is null)
+                return NotFound();
+
+            return Parser.PortionFromDALToApp(portion);
+        }
+
+        [HttpPost("Portions", Name = "CreatePortion")]
+        public async Task<ActionResult<Portion>> CreatePortion(Portion portion)
+        {
+            await _mealsService.PortionService.CreateItemAsync(Parser.PortionFromAppToDAL(portion));
+
+            return CreatedAtRoute("CreatePortion", new { id = portion.Id }, portion);
+        }
+
+        [HttpPut("Portions", Name = "UpdatePortion")]
+        public async Task<IActionResult> UpdatePortion([FromQuery] int id, [FromBody] Portion portion)
+        {
+            await _mealsService.PortionService.UpdateItemAsync(Parser.PortionFromAppToDAL(portion), id);
+
+            return Ok();
+        }
+
+        [HttpDelete("Portions/{id}", Name = "DeletePortion")]
+        public async Task<IActionResult> DeletePortion(int id)
+        {
+            await _mealsService.PortionService.DeleteItemAsync(id);
+
+            return Ok();
+        }
+        [HttpGet("PriceListItems", Name = "GetAllPriceListItems")]
+        public async Task<IEnumerable<PriceListItem>> GetAllPriceListItems([FromQuery] string includePath = "")
+        {
+            var asyncResult = _mealsService.PriceListService.GetAllItemsAsync(includePath);
+            
+            var result = new List<PriceListItem>();
+
+            foreach (var item in await asyncResult)
+            {
+                result.Add(Parser.PriceListItemFromDALToApp(item));
+            }
+
+            return result;
+        }
+
+        [HttpGet("PriceListItems/{id}", Name = "GetPriceListItemById")]
+        public async Task<ActionResult<PriceListItem>> GetPriceListItemById(int id, [FromQuery] string includePath = "")
+        {
+            var priceListItem = await _mealsService.PriceListService.GetItemByIdAsync(id, includePath);
+            if (priceListItem is null)
+                return NotFound();
+
+            return Parser.PriceListItemFromDALToApp(priceListItem);
+        }
+
+        [HttpPost("PriceListItems", Name = "CreatePriceListItem")]
+        public async Task<ActionResult<PriceListItem>> CreatePriceListItem(PriceListItem priceListItem)
+        {
+            await _mealsService.PriceListService.CreateItemAsync(Parser.PriceListItemFromAppToDAL(priceListItem));
+
+            return CreatedAtRoute("CreatePriceListItem", new { id = priceListItem.Id }, priceListItem);
+        }
+
+        [HttpPut("PriceListItems/{id}", Name = "UpdatePriceListItem")]
+        public async Task<IActionResult> UpdatePriceListItem(int id, PriceListItem priceListItem)
+        {
+            await _mealsService.PriceListService.UpdateItemAsync(Parser.PriceListItemFromAppToDAL(priceListItem), id);
+
+            return Ok();
+        }
+
+        [HttpDelete("PriceListItems/{id}", Name = "DeletePriceListItem")]
+        public async Task<IActionResult> DeletePriceListItem(int id)
+        {
+            await _mealsService.PriceListService.DeleteItemAsync(id);
+
+            return Ok();
+        }
     }
 }

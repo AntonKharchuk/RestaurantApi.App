@@ -18,22 +18,33 @@ namespace RestaurantApi.Dal.Repositories
             _table = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(string include = "")
+        public async Task<IEnumerable<T>> GetAllAsync(string includes = "")
         {
-            if (!string.IsNullOrEmpty(include))
+            var query = _table.AsQueryable();
+
+            if (!string.IsNullOrEmpty(includes))
             {
-                return await _table.Include(include).ToListAsync();
+                foreach (var include in includes.Split(","))
+                {
+                    query = query.Include(include);
+                }
             }
-            return await _table.ToListAsync();
+            return await query.ToListAsync(); 
         }
 
-        public async Task<T> GetByIdAsync(int id, string include = "")
+        public async Task<T> GetByIdAsync(int id, string includes = "")
         {
-            if (!string.IsNullOrEmpty(include))
+            var query = _table.AsQueryable();
+
+            if (!string.IsNullOrEmpty(includes))
             {
-                return await _table.Include(include).FirstOrDefaultAsync(g => g.Id == id);
+                foreach (var include in includes.Split(","))
+                {
+                    query = query.Include(include);
+                }
             }
-            return await _table.FirstOrDefaultAsync(g => g.Id == id);
+
+            return await query.FirstOrDefaultAsync(g => g.Id == id);
         }
 
         public async Task AddAsync(T entity)

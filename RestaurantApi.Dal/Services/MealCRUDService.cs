@@ -13,7 +13,7 @@ namespace RestaurantApi.Dal.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Meal>> GetItemsInRange(int startId, int endId, string include = "")
+        public async Task<IEnumerable<Meal>> GetItemsInRangeAsync(int startId, int endId, string include = "")
         {
             return await _repository.GetInIdRangeAsync(startId, endId, include);
         }

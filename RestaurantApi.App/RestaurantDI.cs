@@ -24,12 +24,12 @@ namespace RestaurantApi.App
                 services.AddTransient<IMealRepository, MealRepository>();
                 services.AddTransient<IMealCRUDService, MealCRUDService>();
 
-                //services.AddTransient<IOrderItemRepository, OrderItemRepository>();
-                //services.AddTransient<IOrderItemCRUDService, OrderItemCRUDService>();
+                services.AddTransient<IOrderItemRepository, OrderItemRepository>();
+                services.AddTransient<IOrderItemCRUDService, OrderItemCRUDService>();
 
 
                 services.AddTransient<IMealsService, MealsService>();
-                //builder.Services.AddTransient<IOrdersService, OrdersService>();
+                services.AddTransient<IOrdersService, OrdersService>();
             }
 
             static void  RegisterModelServices<T>(IServiceCollection services) where T : BaseEntity

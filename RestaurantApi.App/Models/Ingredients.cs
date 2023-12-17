@@ -41,7 +41,7 @@
         public bool IsReady { get; set; }
         public Order? Order { get; set; }
         public int OrderId { get; set; }
-        public PriceListItem? PriceListItem;
+        public PriceListItem? PriceListItem { get; set; }
         public int PriceListItemId { get; set; }
     }
 }

@@ -1,9 +1,8 @@
 ﻿
 namespace RestaurantApi.Dal.Models
 {
-    public class Ingredient: BaseEntity
+    public class Portion: BaseEntity
     {
         public string? Name { get; set; }
-        public List<Meal>? Meals { get; set; }
     }
 }

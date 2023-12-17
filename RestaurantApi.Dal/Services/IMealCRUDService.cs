@@ -5,6 +5,6 @@ namespace RestaurantApi.Dal.Services
 {
     public interface IMealCRUDService: ICRUDService<Meal>
     {
-        Task<IEnumerable<Meal>> GetItemsInRange(int startId, int endId, string include="");
+        Task<IEnumerable<Meal>> GetItemsInRangeAsync(int startId, int endId, string include="");
     }
 }

@@ -12,7 +12,6 @@ namespace RestaurantApi.Dal.Services
     }
     public interface IOrdersService
     {
-        ICRUDService<PriceListItem> PriceListService { get; }
         ICRUDService<Order> OrderService { get; }
         IOrderItemCRUDService OrderItemService { get; }
     }
