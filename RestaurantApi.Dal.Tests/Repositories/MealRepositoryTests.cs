@@ -187,6 +187,59 @@ public class MealRepositoryTests : IDisposable
     }
 
     [Fact]
+    public async Task Update_UpdatesEntityAndIngredientsToDatabase()
+    {
+        // Arrange
+        var ingredientRepository = new Repository<Ingredient>(_context);
+        var ingerdintToAdd = new Ingredient { Id = 1, Name = "name1" };
+        await ingredientRepository.AddAsync(ingerdintToAdd);
+        await ingredientRepository.SaveAsync();
+
+        var repository = new MealRepository(_context);
+        var entity = new Meal { Id = 1, Name = "Meal1" };
+        await repository.AddAsync(entity);
+        await repository.SaveAsync();
+
+        var updatedEntity = new Meal
+        {
+            Id = 1,
+            Name = "NewIngredient1",
+            Ingredients = new List<Ingredient>
+            {
+                new Ingredient{ Id =1, Name = "Dont care"}
+            }
+        };
+
+        // Act
+
+        await repository.UpdateAsync(updatedEntity, 1);
+        await repository.SaveAsync();
+
+        // Assert
+
+        var result = _context.Set<Meal>().FirstOrDefault(e => e.Id == 1);
+        Assert.NotNull(result);
+        Assert.Equal(updatedEntity.Name, result.Name);
+        Assert.NotNull(result.Ingredients);
+        Assert.Equal(updatedEntity.Ingredients[0].Id, result.Ingredients[0].Id);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ThrowsArgumentExceptionWhenIdMismatch()
+    {
+        // Arrange
+        var repository = new MealRepository(_context);
+        var entity = new Meal { Id = 1, Name = "Meal1" };
+        await repository.AddAsync(entity);
+        await repository.SaveAsync();
+
+        var updatedEntity = new Meal { Id = 2, Name = "NewMeal" }; // Mismatched Id
+
+        // Act + Assert
+        AssertThrowsInvalidOperationExceptionAsync(repository.UpdateAsync(updatedEntity, 1));
+    }
+
+    [Fact]
     public async Task Save_PersistsChangesToDatabase()
     {
         // Arrange
@@ -239,6 +292,34 @@ public class MealRepositoryTests : IDisposable
     }
 
     [Fact]
+    public async Task Delete_DeletesExistingEntity()
+    {
+        // Arrange
+        var repository = new MealRepository(_context);
+        var entity = new Meal { Id = 1, Name = "Meal" };
+        await repository.AddAsync(entity);
+        await repository.SaveAsync();
+
+        // Act
+        await repository.DeleteAsync(1);
+        await repository.SaveAsync();
+        // Assert
+        var result = _context.Set<Meal>().FirstOrDefault(e => e.Id == 1);
+        Assert.Null(result);
+    }
+    [Fact]
+    public async Task Delete_ThrowsEntityNotFoundExceptionWhileDeletesNotExistingEntity()
+    {
+        // Arrange
+        var repository = new MealRepository(_context);
+
+        // Act
+        // Assert
+        await Assert.ThrowsAsync<EntityNotFoundException>(
+           async () => await repository.DeleteAsync(1));
+    }
+
+    [Fact]
     public async Task GetById_ReturnsEntityWithIncludesWhenExists()
     {
         // Arrange
@@ -257,7 +338,7 @@ public class MealRepositoryTests : IDisposable
         var expectedEntity = new Meal
         {
             Id = 1,
-            Ingredients = new List<Ingredient> {  ingredientEntity }
+            Ingredients = new List<Ingredient> { ingredientEntity }
         };
         await mealRepository.AddAsync(expectedEntity);
         await mealRepository.SaveAsync();
