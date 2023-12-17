@@ -21,31 +21,24 @@ namespace RestaurantApi.Dal.Repositories
 
         public async Task<IEnumerable<Meal>> GetInIdRangeAsync(int startId, int endId, string include = "")
         {
-            if (!string.IsNullOrEmpty(include))
-            {
-                return await _table.Where(item => item.Id >= startId && item.Id <= endId).Include(include)
-               .ToListAsync();
-            }
-            return await _table.Where(item => item.Id >= startId && item.Id <= endId)
+            var query = _table.AsQueryable();
+            query = IncludeFields(include, query);
+            return await query.Where(item => item.Id >= startId && item.Id <= endId)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Meal>> GetAllAsync(string include="")
         {
-            if (!string.IsNullOrEmpty(include))
-            {
-                return await _table.Include(include).ToListAsync();
-            }
-            return await _table.ToListAsync();
+            var query = _table.AsQueryable();
+            query = IncludeFields(include, query);
+            return await query.ToListAsync();
         }
 
         public async Task<Meal> GetByIdAsync(int id, string include = "")
         {
-            if (!string.IsNullOrEmpty(include))
-            {
-                return await _table.Include(include).FirstOrDefaultAsync(g => g.Id == id);
-            }
-            return await _table.FirstOrDefaultAsync(g => g.Id == id);
+            var query = _table.AsQueryable();
+            query = IncludeFields(include, query);
+            return await query.FirstOrDefaultAsync(g => g.Id == id);
         }
         public async Task AddAsync(Meal entity)
         {
@@ -112,6 +105,18 @@ namespace RestaurantApi.Dal.Repositories
             {
                 throw new EntityNotFoundException("Entity with the specified ID not found.");
             }
+        }
+        private static IQueryable<Meal> IncludeFields(string includes, IQueryable<Meal> query)
+        {
+            if (!string.IsNullOrEmpty(includes))
+            {
+                foreach (var include in includes.Split(","))
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return query;
         }
     }
 }
