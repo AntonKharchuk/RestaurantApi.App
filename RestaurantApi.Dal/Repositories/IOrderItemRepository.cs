@@ -5,6 +5,6 @@ namespace RestaurantApi.Dal.Repositories
 {
     public interface IOrderItemRepository:IRepository<OrderItem>
     {
-        Task<IEnumerable<OrderItem>> GetByOrderId(int id, string includes = "");
+        Task<IEnumerable<OrderItem>> GetByOrderId(int id, string include = "");
     }
 }

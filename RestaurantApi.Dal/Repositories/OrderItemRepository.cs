@@ -17,15 +17,15 @@ namespace RestaurantApi.Dal.Repositories
         }
 
 
-        public async Task<IEnumerable<OrderItem>> GetByOrderId(int id, string includes = "")
+        public async Task<IEnumerable<OrderItem>> GetByOrderId(int id, string include = "")
         {
             var query = _table.AsQueryable();
 
-            if (!string.IsNullOrEmpty(includes))
+            if (!string.IsNullOrEmpty(include))
             {
-                foreach (var include in includes.Split(","))
+                foreach (var field in include.Split(","))
                 {
-                    query = query.Include(include);
+                    query = query.Include(field);
                 }
             }
 
