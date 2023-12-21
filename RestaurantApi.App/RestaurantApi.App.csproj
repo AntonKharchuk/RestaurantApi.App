@@ -18,5 +18,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\RestaurantApi.DAL\RestaurantApi.Dal.csproj" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<InternalsVisibleTo Include="RestaurantApi.AppIntegrationTests" />
+	</ItemGroup>
 </Project>
