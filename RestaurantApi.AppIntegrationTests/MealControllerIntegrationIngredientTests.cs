@@ -20,30 +20,7 @@ namespace RestaurantApi.AppIntegrationTests
 {
     internal class ApiWebApplicationFactory : WebApplicationFactory<Program>
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.ConfigureTestServices(services =>
-            {
-                // Add the DbContext with the in-memory database
-                services.AddDbContext<RestaurantDbContext>(options =>
-                {
-                    options.UseInMemoryDatabase(databaseName: $"TestDatabase_{System.Guid.NewGuid()}");
-                });
-
-                // Optionally, you can seed initial data for your tests
-                SeedTestData(services);
-            });
-        }
-
-        private void SeedTestData(IServiceCollection services)
-        {
-            using (var scope = services.BuildServiceProvider().CreateScope())
-            {
-                var serviceProvider = scope.ServiceProvider;
-                var dbContext = serviceProvider.GetRequiredService<RestaurantDbContext>();
-
-            }
-        }
+        
     }
 
     public class MealControllerIntegrationIngredientTests : IClassFixture<ApiWebApplicationFactory>
@@ -95,7 +72,6 @@ namespace RestaurantApi.AppIntegrationTests
             // Arrange
             var client = _factory.CreateClient();
 
-            // Replace 1 with an existing ingredient id in your test database
             var existingIngredientId = 20;
 
             // Act
@@ -105,14 +81,10 @@ namespace RestaurantApi.AppIntegrationTests
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // Deserialize the response content to check the data
             var content = await response.Content.ReadAsStringAsync();
             var ingredient = JsonConvert.DeserializeObject<Ingredient>(content);
 
-            // Add your specific assertions for the returned data
             Assert.NotNull(ingredient);
-            // You may want to add more specific assertions based on your actual data
-            // For example, checking if certain properties have expected values.
         }
 
         [Fact]
@@ -121,7 +93,6 @@ namespace RestaurantApi.AppIntegrationTests
             // Arrange
             var client = _factory.CreateClient();
 
-            // Replace 999 with a non-existing ingredient id in your test database
             var nonExistingIngredientId = 999;
 
             // Act
@@ -159,12 +130,9 @@ namespace RestaurantApi.AppIntegrationTests
             // Arrange
             var client = _factory.CreateClient();
 
-            // Create a new Ingredient object for testing
             var newIngredient = new Ingredient
             {
-                // Set the properties according to your test data
                 Name = "TestIngredient",
-                // Add other properties as needed
             };
 
             var json = JsonConvert.SerializeObject(newIngredient);
@@ -177,17 +145,12 @@ namespace RestaurantApi.AppIntegrationTests
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-            // Deserialize the response content to check the created Ingredient
             var createdIngredient = JsonConvert.DeserializeObject<Ingredient>(await response.Content.ReadAsStringAsync());
 
-            // Add your specific assertions for the created Ingredient
             Assert.NotNull(createdIngredient);
             Assert.Equal(newIngredient.Name, createdIngredient.Name);
-            // Add other assertions based on your actual data
 
-            // You may also want to check the Location header for the created resource
             Assert.NotNull(response.Headers.Location);
-            // Add assertions for the Location header based on your application's expectations
         }
 
         [Fact]
@@ -196,16 +159,12 @@ namespace RestaurantApi.AppIntegrationTests
             // Arrange
             var client = _factory.CreateClient();
 
-            // Replace 1 with an existing ingredient id in your test database
             var existingIngredientId = 20;
 
-            // Create an updated Ingredient object for testing
             var updatedIngredient = new Ingredient
             {
-                // Set the properties according to your test data for the update
                 Id= existingIngredientId,
                 Name = "UpdatedIngredient",
-                // Add other properties as needed
             };
 
             var json = JsonConvert.SerializeObject(updatedIngredient);
@@ -218,14 +177,11 @@ namespace RestaurantApi.AppIntegrationTests
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // Optionally, you can retrieve the updated Ingredient from the database and assert its properties
             var updatedIngredientFromDb = await GetIngredientFromDatabase(client, existingIngredientId);
 
 
-            // Add your specific assertions for the updated Ingredient
             Assert.NotNull(updatedIngredientFromDb);
             Assert.Equal(updatedIngredient.Name, updatedIngredientFromDb.Name);
-            // Add other assertions based on your actual data
         }
 
         [Fact]
@@ -249,7 +205,6 @@ namespace RestaurantApi.AppIntegrationTests
 
             var lastIngredient = ingredients[ingredients.Count - 1];
 
-            // Replace 1 with an existing ingredient id in your test database
             var existingIngredientId = lastIngredient.Id;
 
             // Act
@@ -261,7 +216,7 @@ namespace RestaurantApi.AppIntegrationTests
 
             var ensureDeletedResponse = await client.GetAsync($"/api/Meal/Ingredients/{existingIngredientId}");
 
-            Assert.Equal(ensureDeletedResponse.StatusCode, HttpStatusCode.NotFound); // Ensure the ingredient is deleted
+            Assert.Equal(ensureDeletedResponse.StatusCode, HttpStatusCode.NotFound);
         }
 
         [Fact]
@@ -270,7 +225,6 @@ namespace RestaurantApi.AppIntegrationTests
             // Arrange
             var client = _factory.CreateClient();
 
-            // Replace 999 with a non-existing ingredient id in your test database
             var nonExistingIngredientId = 999;
 
             // Act
@@ -298,7 +252,6 @@ namespace RestaurantApi.AppIntegrationTests
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // Deserialize the response content to check the data
             var content = await response.Content.ReadAsStringAsync();
             var ingredient = JsonConvert.DeserializeObject<Ingredient>(content);
             return ingredient;  
@@ -313,7 +266,6 @@ namespace RestaurantApi.AppIntegrationTests
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            // Deserialize the response content to check the data
             var content = await response.Content.ReadAsStringAsync();
             var ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(content);
             return ingredients;

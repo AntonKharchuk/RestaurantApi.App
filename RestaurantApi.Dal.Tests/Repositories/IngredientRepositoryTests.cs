@@ -18,7 +18,6 @@ public class IngredientRepositoryTests : IDisposable
 
     public IngredientRepositoryTests()
     {
-        // Use an in-memory database for testing
         _options = new DbContextOptionsBuilder<RestaurantDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDatabase_{System.Guid.NewGuid()}")
             .Options;
@@ -130,9 +129,7 @@ public class IngredientRepositoryTests : IDisposable
 
         // Assert
         Assert.ThrowsAsync<InvalidOperationException>(act);
-        //var exeption = Record.Exception(act);
 
-        //Assert.Equal(exeption, new InvalidOperationException());
     }
     [Fact]
     public async Task Add_ThrowsExeptionWhileAddingEntityWithIdBetweenExistedIds()
@@ -150,9 +147,7 @@ public class IngredientRepositoryTests : IDisposable
 
         // Assert
         Assert.ThrowsAsync<InvalidOperationException>(act);
-        //var exeption = Record.Exception(act);
 
-        //Assert.Equal(exeption, new InvalidOperationException());
     }
 
     [Fact]
@@ -197,7 +192,7 @@ public class IngredientRepositoryTests : IDisposable
         await repository.AddAsync(entity);
         await repository.SaveAsync();
 
-        var updatedEntity = new Ingredient { Id = 2, Name = "NewIngredient" }; // Mismatched Id
+        var updatedEntity = new Ingredient { Id = 2, Name = "NewIngredient" }; 
 
         // Act + Assert
         await Assert.ThrowsAsync<ArgumentException>(
@@ -324,7 +319,6 @@ public class IngredientRepositoryTests : IDisposable
 
     public void Dispose()
     {
-        // Clean up the in-memory database after each test
         _context.Dispose();
     }
 

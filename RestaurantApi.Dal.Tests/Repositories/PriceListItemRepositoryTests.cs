@@ -14,7 +14,6 @@ public class PriceListItemRepositoryTests : IDisposable
 
     public PriceListItemRepositoryTests()
     {
-        // Use an in-memory database for testing
         _options = new DbContextOptionsBuilder<RestaurantDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDatabase_{System.Guid.NewGuid()}")
             .Options;
