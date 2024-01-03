@@ -2,7 +2,7 @@
 using Moq;
 
 using RestaurantApi.Dal.Models;
-using RestaurantApi.Dal.Services;
+using RestaurantApi.Business.Services;
 
 namespace RestaurantApi.Dal.Tests.Services;
 

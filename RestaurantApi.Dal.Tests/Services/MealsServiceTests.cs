@@ -1,6 +1,6 @@
 ﻿using Xunit;
 using Moq; // You may need to install the Moq NuGet package for mocking
-using RestaurantApi.Dal.Services;
+using RestaurantApi.Business.Services;
 using RestaurantApi.Dal.Models;
 
 public class MealsServiceTests

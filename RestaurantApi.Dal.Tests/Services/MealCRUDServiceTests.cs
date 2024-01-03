@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 using RestaurantApi.Dal.Models;
 using RestaurantApi.Dal.Repositories;
-using RestaurantApi.Dal.Services;
+using RestaurantApi.Business.Services;
 
 namespace RestaurantApi.Dal.Tests.Services;
 

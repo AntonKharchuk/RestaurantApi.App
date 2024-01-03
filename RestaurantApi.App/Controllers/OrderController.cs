@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 using RestaurantApi.App.Models;
-using RestaurantApi.Dal.Services;
+using RestaurantApi.Business.Services;
 
 namespace RestaurantApi.App.Controllers
 {
