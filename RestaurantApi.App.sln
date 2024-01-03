@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApi.App", "Restau
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApi.Dal.Tests", "RestaurantApi.Dal.Tests\RestaurantApi.Dal.Tests.csproj", "{5D73B6AF-960A-457E-A1BA-B9DAA3488920}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApi.AppIntegrationTests", "RestaurantApi.AppIntegrationTests\RestaurantApi.AppIntegrationTests.csproj", "{0D83886E-C091-4CE7-BD83-1004454EE485}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApi.AppIntegrationTests", "RestaurantApi.AppIntegrationTests\RestaurantApi.AppIntegrationTests.csproj", "{0D83886E-C091-4CE7-BD83-1004454EE485}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApi.Business", "RestaurantApi.Business\RestaurantApi.Business.csproj", "{801F4080-5E73-489C-BDE5-A70E5FF0F2EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0D83886E-C091-4CE7-BD83-1004454EE485}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D83886E-C091-4CE7-BD83-1004454EE485}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D83886E-C091-4CE7-BD83-1004454EE485}.Release|Any CPU.Build.0 = Release|Any CPU
+		{801F4080-5E73-489C-BDE5-A70E5FF0F2EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{801F4080-5E73-489C-BDE5-A70E5FF0F2EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{801F4080-5E73-489C-BDE5-A70E5FF0F2EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{801F4080-5E73-489C-BDE5-A70E5FF0F2EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
