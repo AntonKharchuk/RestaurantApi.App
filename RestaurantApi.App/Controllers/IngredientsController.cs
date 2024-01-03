@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using RestaurantApi.App.Models;
 using RestaurantApi.Business.Services;
 
 namespace RestaurantApi.App.Controllers
 {
-    [Route("api/Meal/[controller]")]
+
+    [Route("/api/Meal/[controller]")]
     [ApiController]
-    public class IngrediensController : ControllerBase
+    public class IngredientsController : ControllerBase
     {
         private ICRUDService<Dal.Models.Ingredient> _ingredientsServise;
 
-        public IngrediensController(ICRUDService<Dal.Models.Ingredient> ingredientsServise)
+        public IngredientsController(ICRUDService<Dal.Models.Ingredient> ingredientsServise)
         {
             _ingredientsServise = ingredientsServise;
         }
@@ -41,15 +43,15 @@ namespace RestaurantApi.App.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Ingredient>> CreateIngredient(Ingredient ingredient)
+        public async Task<ActionResult<Ingredient>> CreateIngredient([FromBody] Ingredient ingredient)
         {
             await _ingredientsServise.CreateItemAsync(Parser.IngredientFromAppToDAL(ingredient));
 
-            return CreatedAtRoute("CreateIngredient", new { id = ingredient.Id }, ingredient);
+            return Ok(ingredient);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateIngredient([FromQuery] int id, [FromBody] Ingredient ingredient)
+        public async Task<IActionResult> UpdateIngredient(int id, [FromBody] Ingredient ingredient)
         {
             await _ingredientsServise.UpdateItemAsync(Parser.IngredientFromAppToDAL(ingredient), id);
 

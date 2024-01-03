@@ -121,7 +121,7 @@ namespace RestaurantApi.AppIntegrationTests
 
             // Assert
             response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
@@ -143,14 +143,11 @@ namespace RestaurantApi.AppIntegrationTests
 
             // Assert
             response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
             var createdIngredient = JsonConvert.DeserializeObject<Ingredient>(await response.Content.ReadAsStringAsync());
 
             Assert.NotNull(createdIngredient);
             Assert.Equal(newIngredient.Name, createdIngredient.Name);
-
-            Assert.NotNull(response.Headers.Location);
         }
 
         [Fact]
@@ -171,7 +168,7 @@ namespace RestaurantApi.AppIntegrationTests
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             // Act
-            var response = await client.PutAsync($"/api/Meal/Ingredients?id={existingIngredientId}", content);
+            var response = await client.PutAsync($"/api/Meal/Ingredients/{existingIngredientId}", content);
 
             // Assert
             response.EnsureSuccessStatusCode();
