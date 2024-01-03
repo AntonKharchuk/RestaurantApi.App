@@ -14,7 +14,6 @@ namespace RestaurantApi.Dal.Tests.Repositories
 
         public OrderItemRepositoryTests()
         {
-            // Use an in-memory database for testing
             _options = new DbContextOptionsBuilder<RestaurantDbContext>()
                 .UseInMemoryDatabase(databaseName: $"TestDatabase_{System.Guid.NewGuid()}")
                 .Options;

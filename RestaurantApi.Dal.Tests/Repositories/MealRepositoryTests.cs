@@ -14,7 +14,6 @@ public class MealRepositoryTests : IDisposable
 
     public MealRepositoryTests()
     {
-        // Use an in-memory database for testing
         _options = new DbContextOptionsBuilder<RestaurantDbContext>()
             .UseInMemoryDatabase(databaseName: $"TestDatabase_{System.Guid.NewGuid()}")
             .Options;
@@ -390,7 +389,6 @@ public class MealRepositoryTests : IDisposable
 
     public void Dispose()
     {
-        // Clean up the in-memory database after each test
         _context.Dispose();
     }
 

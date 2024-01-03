@@ -2,7 +2,7 @@
 using RestaurantApi.Dal.Models;
 using RestaurantApi.Dal.Repositories;
 
-namespace RestaurantApi.Dal.Services
+namespace RestaurantApi.Business.Services
 {
     public class MealCRUDService : CRUDService<Meal>, IMealCRUDService
     {

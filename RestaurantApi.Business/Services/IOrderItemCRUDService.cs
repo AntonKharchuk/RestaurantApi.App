@@ -1,7 +1,7 @@
 ﻿
 using RestaurantApi.Dal.Models;
 
-namespace RestaurantApi.Dal.Services
+namespace RestaurantApi.Business.Services
 {
     public interface IOrderItemCRUDService: ICRUDService<OrderItem>
     {
